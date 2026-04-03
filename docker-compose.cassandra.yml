@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  cassandra1:
+    image: cassandra:4.1
+    container_name: cassandra1
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra1
+    volumes:
+      - ./cassandra-data/node1:/var/lib/cassandra
+    networks:
+      - cassandra-net
+
+  cassandra2:
+    image: cassandra:4.1
+    container_name: cassandra2
+    depends_on:
+      - cassandra1
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra1
+    volumes:
+      - ./cassandra-data/node2:/var/lib/cassandra
+    networks:
+      - cassandra-net
+
+networks:
+  cassandra-net:
